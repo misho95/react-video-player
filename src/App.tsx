@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 import Video from "./assets/Hollow Knight_ Silksong.mp4";
 import {
   BsFillPlayCircleFill,
@@ -12,16 +12,23 @@ function App() {
   const videoRef = useRef<HTMLVideoElement | null>(null);
   const progressRef = useRef<SVGSVGElement | null>(null);
   const [play, setPlay] = useState(false);
-  const [fullWidth, setFullWidth] = useState(0);
+  const [fullWidth, setFullWidth] = useState<number>(0);
   const [duration, setDuration] = useState<number>(0);
-  const [progress, setProgress] = useState(0);
-  const [track, setTrack] = useState(0);
-  const [mute, setMute] = useState(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [track, setTrack] = useState<number>(0);
+  const [mute, setMute] = useState<boolean>(false);
+
+  useLayoutEffect(() => {
+    if (progressRef.current) {
+      const { width } = progressRef.current.getBoundingClientRect();
+      setFullWidth(width);
+    }
+  }, []);
 
   const playPause = () => {
     if (!videoRef.current) return;
-    if (duration === 0 && progressRef.current) {
-      setFullWidth(progressRef.current.scrollWidth);
+
+    if (duration === 0) {
       setDuration(videoRef.current.duration);
     }
 
