@@ -17,6 +17,7 @@ function App() {
   const [progress, setProgress] = useState<number>(0);
   const [track, setTrack] = useState<number>(0);
   const [mute, setMute] = useState<boolean>(false);
+  const [drag, setDrag] = useState<boolean>(false);
 
   useLayoutEffect(() => {
     if (progressRef.current) {
@@ -47,6 +48,9 @@ function App() {
   };
 
   const handleSVGClick = (event) => {
+    if (!play) {
+      playPause();
+    }
     // Handle the click event and get the coordinates
     const svg = event.target;
     const point = svg.createSVGPoint();
@@ -90,7 +94,7 @@ function App() {
       if (!videoRef.current) return;
       videoRef.current.removeEventListener("timeupdate", updateTimeProgress);
     };
-  }, []);
+  }, [play]);
 
   return (
     <div className="flex justify-center items-center w-full h-screen bg-black">
